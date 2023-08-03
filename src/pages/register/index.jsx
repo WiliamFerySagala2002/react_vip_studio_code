@@ -1,6 +1,6 @@
 import React from 'react'
-import AuthLayout from '../components/Layout/AouthLayout'
-import FormRegister from '../components/Fragments/FormRegister'
+import FormRegister from '../../components/Fragments/FormRegister'
+import AuthLayout from '../../components/Layout/AouthLayout'
 
 export default function RegisterPage() {
   return (

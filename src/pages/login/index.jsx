@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
-import AuthLayout from '../components/Layout/AouthLayout'
-import FormLogin from '../components/Fragments/FormLogin'
+import AuthLayout from '../../components/Layout/AouthLayout'
+import FormLogin from '../../components/Fragments/FormLogin'
 
 const LoginPages = () => {
   return (

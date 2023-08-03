@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
-import CardProducts from '../components/Fragments/CardProducts'
-import Buttons from '../components/Elements/Buttons'
+import CardProducts from '../../components/Fragments/CardProducts'
+import Buttons from '../../components/Elements/Buttons'
 
 const dbProduct = [
   {

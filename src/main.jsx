@@ -1,11 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import LoginPages from './pages/login'
+import LoginPages from './pages/login/index'
 import RegisterPages from './pages/register'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import ErrorPages from './pages/404'
-import ProductPages from './pages/products'
+import ErrorPages from './pages/404/index'
+import ProductPages from './pages/products/index'
 
 const router = createBrowserRouter([
   {
