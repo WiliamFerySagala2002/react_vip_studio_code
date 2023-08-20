@@ -4,7 +4,7 @@ import Buttons from '../../Elements/Buttons'
 const CardProducts = ({ children }) => {
   return (
     <Fragment>
-      <div className="w-full max-w-sm flex flex-col justify-between bg-gray-800 border border-gray-700 rounded-lg shadow">
+      <div className="w-full max-w-xs flex flex-col justify-between bg-gray-800 border border-gray-700 rounded-lg ">
         {children}
       </div>
     </Fragment>
@@ -32,11 +32,18 @@ const Body = ({ title, children }) => {
   )
 }
 
-const Footer = ({ price }) => {
+const Footer = ({ price, addToCart, id }) => {
   return (
     <div className="flex items-center justify-between px-5 pb-5">
-      <span className="text-2xl font-bold text-white">Rp {price}</span>
-      <Buttons btnStyle="bg-blue-600 hover:bg-blue-700">Add to Cart</Buttons>
+      <span className="text-2xl font-bold text-white">
+        Rp{' '}
+        {price.toLocaleString('id-ID', { styles: 'currency', currency: 'IDR' })}
+      </span>
+      <Buttons
+        btnStyle="bg-blue-600 hover:bg-blue-700"
+        onClick={() => addToCart(id)}>
+        Add to Cart
+      </Buttons>
     </div>
   )
 }

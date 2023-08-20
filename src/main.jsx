@@ -6,11 +6,12 @@ import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import ErrorPages from './pages/404/index'
 import ProductPages from './pages/products/index'
+import App from './App'
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <div>Hello World</div>,
+    element: <App />,
     errorElement: <ErrorPages />,
   },
   {
