@@ -14,9 +14,18 @@ const CardProducts = ({ children }) => {
 const Header = ({ imgSrc }) => {
   return (
     <a href="">
-      <img src={imgSrc} alt="Sepatu Baru" className="p-8 rounded-l-lg" />
+      <img
+        src={imgSrc}
+        alt="Sepatu Baru"
+        className="p-8 rounded-l-lg h-60 w-full"
+      />
     </a>
   )
+}
+
+const limitsWords = (words, limit) => {
+  const word = words.split(' ')
+  return word.slice(0, limit).join(' ')
 }
 
 const Body = ({ title, children }) => {
@@ -24,9 +33,9 @@ const Body = ({ title, children }) => {
     <div className="px-5 pb-5">
       <a href="">
         <h5 className="text-xl font-semibold tracking-tight text-white mb-2">
-          {title}
+          {limitsWords(title, 4)}
         </h5>
-        <p className="text-sm text-white">{children}</p>
+        <p className="text-sm text-white">{limitsWords(children, 20)}...</p>
       </a>
     </div>
   )
@@ -52,4 +61,5 @@ CardProducts.Header = Header
 CardProducts.Body = Body
 CardProducts.Footer = Footer
 
+export { limitsWords }
 export default CardProducts

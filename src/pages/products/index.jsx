@@ -1,79 +1,38 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
-import CardProducts from '../../components/Fragments/CardProducts'
+import CardProducts, {
+  limitsWords,
+} from '../../components/Fragments/CardProducts'
 import Buttons from '../../components/Elements/Buttons'
 import Counter from '../../components/Fragments/Counter'
-
-const dbProduct = [
-  {
-    id: 1,
-    name: 'Sepatu Baru',
-    price: 150000,
-    image: 'public/image/shoes-1.jpg',
-    info: `Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-           Quibusdam voluptates ipsum dicta earum repudiandae temporibus, 
-           iure atque  harum molestias vero minus, quas molestiae, ipsa odio praesentium`,
-  },
-  {
-    id: 2,
-    name: 'Sepatu Lama',
-    price: 100000,
-    image: 'public/image/shoes-1.jpg',
-    info: `Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-           Quibusdam voluptates ipsum `,
-  },
-  {
-    id: 3,
-    name: 'Sepatu Trending',
-    price: 250000,
-    image: 'public/image/shoes-1.jpg',
-    info: `Sepatu tranding buatan anak bangsa, bergaya bersama karya anak bangsa === "Cinta tanah air"`,
-  },
-  {
-    id: 4,
-    name: 'Sepatu Baru',
-    price: 200000,
-    image: 'public/image/shoes-1.jpg',
-    info: `Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-           Quibusdam voluptates ipsum dicta earum repudiandae temporibus, 
-           iure atque  harum molestias vero minus, quas molestiae, ipsa odio praesentium`,
-  },
-  {
-    id: 5,
-    name: 'Sepatu Lama',
-    price: 80000,
-    image: 'public/image/shoes-1.jpg',
-    info: `Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-           Quibusdam voluptates ipsum `,
-  },
-  {
-    id: 6,
-    name: 'Sepatu Trending',
-    price: 400000,
-    image: 'public/image/shoes-1.jpg',
-    info: `Sepatu tranding buatan anak bangsa, bergaya bersama karya anak bangsa === "Cinta tanah air"`,
-  },
-]
+import { getProducts } from '../../services/product.service'
 
 const email = localStorage.getItem('email')
 
 const ProductPages = () => {
   const [cart, setCart] = useState([])
   const [prices, setPrices] = useState(0)
+  const [products, setProducts] = useState([])
 
   useEffect(() => {
     setCart(JSON.parse(localStorage.getItem('cart')) || [])
   }, [])
 
   useEffect(() => {
-    if (cart.length > 0) {
+    getProducts((data) => {
+      setProducts(data)
+    })
+  }, [])
+
+  useEffect(() => {
+    if (products.length > 0 && cart.length > 0) {
       const sum = cart.reduce((acc, item) => {
-        const product = dbProduct.find((product) => product.id === item.id)
+        const product = products.find((product) => product.id === item.id)
         return acc + product.price * item.qty
       }, 0)
       setPrices(sum)
       localStorage.setItem('cart', JSON.stringify(cart))
     }
-  }, [cart])
+  }, [cart, products])
 
   const handleAddtoCart = (id) => {
     if (cart.find((i) => i.id === id)) {
@@ -86,16 +45,9 @@ const ProductPages = () => {
   const handleLogout = () => {
     localStorage.removeItem('email')
     localStorage.removeItem('password')
+    localStorage.removeItem('cart')
     window.location.href = '/login'
   }
-
-  // useRef
-  // const cartRef = useRef(JSON.parse(localStorage.getItem('cart') || []))
-
-  // const handleAddtoCartRef = (id) => {
-  //   cartRef.current = [...cartRef.current, { id, qty: 1 }]
-  //   localStorage.setItem('cart', JSON.stringify(cartRef.current))
-  // }
 
   return (
     <Fragment>
@@ -108,19 +60,20 @@ const ProductPages = () => {
         </div>
         <div className="px-2 py-3 flex">
           <div className="flex flex-wrap w-[65%] gap-2">
-            {dbProduct.map((product) => (
-              <CardProducts key={product.id}>
-                <CardProducts.Header imgSrc={product.image} />
-                <CardProducts.Body title={product.name}>
-                  {product.info}
-                </CardProducts.Body>
-                <CardProducts.Footer
-                  price={product.price}
-                  id={product.id}
-                  addToCart={handleAddtoCart}
-                />
-              </CardProducts>
-            ))}
+            {products.length > 0 &&
+              products.map((product) => (
+                <CardProducts key={product.id}>
+                  <CardProducts.Header imgSrc={product.image} />
+                  <CardProducts.Body title={product.title}>
+                    {product.description}
+                  </CardProducts.Body>
+                  <CardProducts.Footer
+                    price={product.price}
+                    id={product.id}
+                    addToCart={handleAddtoCart}
+                  />
+                </CardProducts>
+              ))}
           </div>
           <div className="w-[35%]">
             <h1 className="text-3xl font-bold text-blue-600">Cart</h1>
@@ -143,35 +96,37 @@ const ProductPages = () => {
                 </tr>
               </thead>
               <tbody>
-                {cart.map((i) => {
-                  const products = dbProduct.find(
-                    (product) => product.id === i.id
-                  )
+                {products.length > 0 &&
+                  cart.map((i) => {
+                    const product = products.find(
+                      (product) => product.id === i.id
+                    )
 
-                  return (
-                    <tr key={i.id}>
-                      <td>{products.name}</td>
-                      <td>
-                        Rp{' '}
-                        {products.price.toLocaleString('id-ID', {
-                          styles: 'currency',
-                          currency: 'IDR',
-                        })}
-                      </td>
-                      <td>{i.qty}</td>
-                      <td>
-                        {(products.price * i.qty).toLocaleString('id-ID', {
-                          styles: 'currency',
-                          currency: 'IDR',
-                        })}
-                      </td>
-                    </tr>
-                  )
-                })}
+                    return (
+                      <tr key={i.id}>
+                        <td>{limitsWords(product.title, 3)}</td>
+                        <td>
+                          ${' '}
+                          {product.price.toLocaleString('en-US', {
+                            styles: 'currency',
+                            currency: 'USD',
+                          })}
+                        </td>
+                        <td>{i.qty}</td>
+                        <td>
+                          ${' '}
+                          {(product.price * i.qty).toLocaleString('en-US', {
+                            styles: 'currency',
+                            currency: 'USD',
+                          })}
+                        </td>
+                      </tr>
+                    )
+                  })}
                 <tr className="font-bold bg-base-200">
                   <td colSpan={3}>Prices</td>
                   <td>
-                    Rp{' '}
+                    ${' '}
                     {prices.toLocaleString('id-ID', {
                       styles: 'currency',
                       currency: 'IDR',
