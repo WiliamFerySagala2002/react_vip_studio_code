@@ -7,6 +7,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import ErrorPages from './pages/404/index'
 import ProductPages from './pages/products/index'
 import App from './App'
+import ProfilePages from './pages/profile'
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
   {
     path: '/products',
     element: <ProductPages />,
+  },
+  {
+    path: '/profile',
+    element: <ProfilePages />,
   },
 ])
 

@@ -5,13 +5,14 @@ import CardProducts, {
 import Buttons from '../../components/Elements/Buttons'
 import Counter from '../../components/Fragments/Counter'
 import { getProducts } from '../../services/product.service'
-
-const email = localStorage.getItem('email')
+import { getUsername } from '../../services/auth.service'
+import { useLogin } from '../../hooks/useLogin'
 
 const ProductPages = () => {
   const [cart, setCart] = useState([])
   const [prices, setPrices] = useState(0)
   const [products, setProducts] = useState([])
+  const user = useLogin()
 
   useEffect(() => {
     setCart(JSON.parse(localStorage.getItem('cart')) || [])
@@ -43,8 +44,7 @@ const ProductPages = () => {
   }
 
   const handleLogout = () => {
-    localStorage.removeItem('email')
-    localStorage.removeItem('password')
+    localStorage.removeItem('token')
     localStorage.removeItem('cart')
     window.location.href = '/login'
   }
@@ -53,7 +53,7 @@ const ProductPages = () => {
     <Fragment>
       <div className="bg-[#ffffff] w-full h-sreen " data-thema="light">
         <div className="flex  justify-end py-2 px-5 gap-2 items-center h-full w-full bg-gray-500 bg-clip-padding backdrop-filter  backdrop-blur bg-opacity-50 saturate-100 backdrop-contrast-100">
-          <h5 className="text-white font-bold text-md">{email}</h5>
+          <h5 className="text-white font-bold text-md uppercase">{user}</h5>
           <Buttons btnStyle="bg-blue-600" onClick={handleLogout}>
             Logout
           </Buttons>
