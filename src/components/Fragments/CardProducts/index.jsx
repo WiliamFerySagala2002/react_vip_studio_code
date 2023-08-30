@@ -1,6 +1,8 @@
 import { Fragment } from 'react'
 import Buttons from '../../Elements/Buttons'
 import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { addToCart } from '../../../redux/slices/cartSlice'
 
 const CardProducts = ({ children }) => {
   return (
@@ -42,7 +44,8 @@ const Body = ({ title, children }) => {
   )
 }
 
-const Footer = ({ price, addToCart, id }) => {
+const Footer = ({ price, id }) => {
+  const dispatch = useDispatch()
   return (
     <div className="flex items-center justify-between px-5 pb-5">
       <span className="text-2xl font-bold text-white">
@@ -51,7 +54,7 @@ const Footer = ({ price, addToCart, id }) => {
       </span>
       <Buttons
         btnStyle="bg-blue-600 hover:bg-blue-700"
-        onClick={() => addToCart(id)}>
+        onClick={() => dispatch(addToCart({ id, qty: 1 }))}>
         Add to Cart
       </Buttons>
     </div>

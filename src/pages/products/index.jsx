@@ -1,47 +1,19 @@
-import { Fragment, useEffect, useRef, useState } from 'react'
-import CardProducts, {
-  limitsWords,
-} from '../../components/Fragments/CardProducts'
+import { Fragment, useEffect, useState } from 'react'
+import CardProducts from '../../components/Fragments/CardProducts'
 import Buttons from '../../components/Elements/Buttons'
-import Counter from '../../components/Fragments/Counter'
 import { getProducts } from '../../services/product.service'
-import { getUsername } from '../../services/auth.service'
 import { useLogin } from '../../hooks/useLogin'
+import TableCart from '../../components/Fragments/TableCart'
 
 const ProductPages = () => {
-  const [cart, setCart] = useState([])
-  const [prices, setPrices] = useState(0)
   const [products, setProducts] = useState([])
   const user = useLogin()
-
-  useEffect(() => {
-    setCart(JSON.parse(localStorage.getItem('cart')) || [])
-  }, [])
 
   useEffect(() => {
     getProducts((data) => {
       setProducts(data)
     })
   }, [])
-
-  useEffect(() => {
-    if (products.length > 0 && cart.length > 0) {
-      const sum = cart.reduce((acc, item) => {
-        const product = products.find((product) => product.id === item.id)
-        return acc + product.price * item.qty
-      }, 0)
-      setPrices(sum)
-      localStorage.setItem('cart', JSON.stringify(cart))
-    }
-  }, [cart, products])
-
-  const handleAddtoCart = (id) => {
-    if (cart.find((i) => i.id === id)) {
-      setCart(cart.map((i) => (i.id === id ? { ...i, qty: i.qty + 1 } : i)))
-    } else {
-      setCart([...cart, { id, qty: 1 }])
-    }
-  }
 
   const handleLogout = () => {
     localStorage.removeItem('token')
@@ -67,74 +39,14 @@ const ProductPages = () => {
                   <CardProducts.Body title={product.title}>
                     {product.description}
                   </CardProducts.Body>
-                  <CardProducts.Footer
-                    price={product.price}
-                    id={product.id}
-                    addToCart={handleAddtoCart}
-                  />
+                  <CardProducts.Footer price={product.price} id={product.id} />
                 </CardProducts>
               ))}
           </div>
           <div className="w-[35%]">
             <h1 className="text-3xl font-bold text-blue-600">Cart</h1>
 
-            <table className="table ">
-              <thead className="bg-base-200 ">
-                <tr className="">
-                  <th>
-                    <b>Product</b>
-                  </th>
-                  <th>
-                    <b>Price</b>
-                  </th>
-                  <th>
-                    <b>Ouantity</b>
-                  </th>
-                  <th>
-                    <b>Total</b>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {products.length > 0 &&
-                  cart.map((i) => {
-                    const product = products.find(
-                      (product) => product.id === i.id
-                    )
-
-                    return (
-                      <tr key={i.id}>
-                        <td>{limitsWords(product.title, 3)}</td>
-                        <td>
-                          ${' '}
-                          {product.price.toLocaleString('en-US', {
-                            styles: 'currency',
-                            currency: 'USD',
-                          })}
-                        </td>
-                        <td>{i.qty}</td>
-                        <td>
-                          ${' '}
-                          {(product.price * i.qty).toLocaleString('en-US', {
-                            styles: 'currency',
-                            currency: 'USD',
-                          })}
-                        </td>
-                      </tr>
-                    )
-                  })}
-                <tr className="font-bold bg-base-200">
-                  <td colSpan={3}>Prices</td>
-                  <td>
-                    ${' '}
-                    {prices.toLocaleString('id-ID', {
-                      styles: 'currency',
-                      currency: 'IDR',
-                    })}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <TableCart products={products} />
           </div>
         </div>
       </div>
