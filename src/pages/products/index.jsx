@@ -63,7 +63,7 @@ const ProductPages = () => {
             {products.length > 0 &&
               products.map((product) => (
                 <CardProducts key={product.id}>
-                  <CardProducts.Header imgSrc={product.image} />
+                  <CardProducts.Header imgSrc={product.image} id={product.id} />
                   <CardProducts.Body title={product.title}>
                     {product.description}
                   </CardProducts.Body>
