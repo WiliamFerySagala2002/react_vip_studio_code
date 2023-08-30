@@ -8,6 +8,7 @@ import ErrorPages from './pages/404/index'
 import ProductPages from './pages/products/index'
 import App from './App'
 import ProfilePages from './pages/profile'
+import DetailProductPages from './pages/detailProduct'
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
   {
     path: '/profile',
     element: <ProfilePages />,
+  },
+  {
+    path: '/product/:id',
+    element: <DetailProductPages />,
   },
 ])
 

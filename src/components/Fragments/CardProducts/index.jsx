@@ -1,5 +1,6 @@
 import { Fragment } from 'react'
 import Buttons from '../../Elements/Buttons'
+import { Link } from 'react-router-dom'
 
 const CardProducts = ({ children }) => {
   return (
@@ -11,15 +12,15 @@ const CardProducts = ({ children }) => {
   )
 }
 
-const Header = ({ imgSrc }) => {
+const Header = ({ imgSrc, id }) => {
   return (
-    <a href="">
+    <Link to={`/product/${id}`}>
       <img
         src={imgSrc}
         alt="Sepatu Baru"
         className="p-8 rounded-l-lg h-60 w-full"
       />
-    </a>
+    </Link>
   )
 }
 
